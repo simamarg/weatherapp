@@ -1,10 +1,18 @@
-h1, h4 {
+h1 {
+    margin: 20px auto;
+}
+
+.bold {
     font-weight: bold;
 }
 
+.page-header {
+    padding-bottom: 20px;
+}
 .card {
     border: 1px solid rgba(0,0,0,.125);
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    margin-bottom: 15px;
 }
 
 .card .card-body {
@@ -32,6 +40,10 @@ h1, h4 {
     margin-bottom: 5px;
 }
 
+.card .comments .comment p {
+    margin: 0px;
+}
+
 .card .write-comment {
     padding: 10px;
     border: 1px solid rgba(0,0,0,.125);
@@ -41,8 +53,8 @@ h1, h4 {
 }
 
 .show {
-    display: block;
-}
+    display: table;
+} 
 
 .card .write-comment input {
     margin-bottom: 5px;

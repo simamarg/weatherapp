@@ -1,7 +1,8 @@
 var results = [];
 
-var addResult = function(data) {
+var addResult = function(data, date) {
     data.comments = [];
+    data.dateInfo = {date: date.toLocaleDateString('en-GB'), time: date.toLocaleTimeString('en-GB')};
     results.push(data);
 };
 
@@ -21,12 +22,13 @@ var addComment = function(cityName, comment) {
     results[i].comments.push({text: comment});
 };
 
-var renderComments = function(comments) {
+var renderComments = function(comments, cityName) {
     commentsObject = {comments: comments};
     var source = $('#comments-template').html();
     var template = Handlebars.compile(source);
     var newHTML = template(commentsObject);
-    $('.card-body').append(newHTML);
+    var cardSelector ='.card[data-name="' + cityName + '"] .card-body';
+    $(cardSelector).append(newHTML);
 };
 
 var renderResults = function() {
@@ -37,18 +39,22 @@ var renderResults = function() {
     var newHTML = template(resultsObject);
     $('.results').append(newHTML);
     results.forEach(function(element) {
-        return renderComments(element.comments);
+        return renderComments(element.comments, element.name);
     });
 };
 
 var fetch = function(city) {
     $.ajax({
         method: "GET",
-        url: 'http://api.openweathermap.org/data/2.5/find?q=' + city +'&units=metric&APPID=d703871f861842b79c60988ccf3b17ec',
+        url: 'http://api.openweathermap.org/data/2.5/find?q=' + city + 
+                '&units=metric&APPID=d703871f861842b79c60988ccf3b17ec',
         success: function (data) {
             console.log(data);
-            addResult(data.list[0]);
-            renderResults();
+            var date = new Date();
+            if (data.list.length) {
+                addResult(data.list[0], date);
+                renderResults();
+            }
         },
         error: function (jqXHR, textStatus, errorThrown) {
             console.log(textStatus);
@@ -56,7 +62,7 @@ var fetch = function(city) {
     });
 };
 
-// events
+// events to handle clicking buttons & links
 $('button').on('click', function() {
     var $input = $(this).closest('form').find('input');
     var city = $input.val();
@@ -79,4 +85,29 @@ $('.results').on('click', '.write-comment button', function() {
     var cityName = $(this).closest('.card').data().name;
     addComment(cityName, comment);
     renderResults();
+});
+
+// events to handle user pressing enter key in input forms
+$('.city-input').on('keypress', function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        var city = $(this).val();
+        if (city !== '') {
+            fetch(city);
+            $(this).val('');
+        }
+    }
+});
+
+$('.results').on('keypress', '.comment-text', function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        var comment = $(this).val();
+        if (comment !== '') {
+            var cityName = $(this).closest('.card').data().name;
+            addComment(cityName, comment);
+            renderResults();
+            $(this).val('');
+        }
+    }
 });
