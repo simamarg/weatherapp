@@ -1,6 +1,7 @@
 var results = [];
 
 var addResult = function(data) {
+    data.comments = [];
     results.push(data);
 };
 
@@ -15,6 +16,19 @@ var removeResult = function(name) {
     results.splice(i, 1);
 };
 
+var addComment = function(cityName, comment) {
+    var i = findResultByName(cityName);
+    results[i].comments.push({text: comment});
+};
+
+var renderComments = function(comments) {
+    commentsObject = {comments: comments};
+    var source = $('#comments-template').html();
+    var template = Handlebars.compile(source);
+    var newHTML = template(commentsObject);
+    $('.card-body').append(newHTML);
+};
+
 var renderResults = function() {
     $('.results').empty();
     resultsObject = {results: results};
@@ -22,6 +36,9 @@ var renderResults = function() {
     var template = Handlebars.compile(source);
     var newHTML = template(resultsObject);
     $('.results').append(newHTML);
+    results.forEach(function(element) {
+        return renderComments(element.comments);
+    });
 };
 
 var fetch = function(city) {
@@ -50,5 +67,16 @@ $('button').on('click', function() {
 $('.results').on('click', '.remove-card', function() {
     var name = $(this).closest('.card').data().name;
     removeResult(name);
+    renderResults();
+});
+
+$('.results').on('click', '.add-comment', function() {
+    $(this).siblings('.write-comment').toggleClass('show');
+});
+
+$('.results').on('click', '.write-comment button', function() {
+    var comment = $(this).closest('.write-comment').find('input').val();
+    var cityName = $(this).closest('.card').data().name;
+    addComment(cityName, comment);
     renderResults();
 });

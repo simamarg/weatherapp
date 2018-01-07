@@ -56,9 +56,24 @@
                     <p class="card-text">{{main.temp}} &deg;C</p>
                     <div class="card-link remove-card">Remove</div>
                     <div class="card-link add-comment">Comment</div>
+                    <div class="write-comment">
+                        <input type="text" class="form-control comment-text" placeholder="Write a comment...">
+                        <button class="btn btn-primary" type="button">Comment</button>
+                    </div>
                 </div>
             </div>
         {{/each}}
+    </script>
+
+    <!-- Handlebars template for adding comments to the city weather card -->
+    <script id="comments-template"type="text/x-handlebars-template">
+        <ul class="list-group comments">
+            {{#each comments}}
+                <li class="list-group-item comment" data-id="{{text}}">
+                    <p>{{text}}</p>
+                </li>
+            {{/each}}
+        </ul>
     </script>
 
     <script type="text/javascript" src="jquery/dist/jquery.min.js"></script>

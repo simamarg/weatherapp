@@ -37,6 +37,11 @@ h1, h4 {
     border: 1px solid rgba(0,0,0,.125);
     border-radius: 4px;
     margin-top: 10px;
+    display: none;
+}
+
+.show {
+    display: block;
 }
 
 .card .write-comment input {
