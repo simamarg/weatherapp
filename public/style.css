@@ -1,3 +1,44 @@
-h1 {
-    color: blue;
+h1, h4 {
+    font-weight: bold;
+}
+
+.card {
+    border: 1px solid rgba(0,0,0,.125);
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.card .card-body {
+    padding: 1.3rem;
+}
+
+.card .card-body .card-link {
+    padding-right: 1.1rem;
+    color: #337ab7;
+    display: inline;
+}
+
+.card .card-body .card-link:hover {
+    color: #23527c;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.card .comments {
+    margin: 15px 0 20px 0;
+}
+
+.card .comments .comment {
+    background-color: #eeeff4;
+    margin-bottom: 5px;
+}
+
+.card .write-comment {
+    padding: 10px;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.card .write-comment input {
+    margin-bottom: 5px;
 }

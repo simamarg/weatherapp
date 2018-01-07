@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +9,62 @@
     <link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
+
 <body>
-    <h1>Weather</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="page-header">
+                    <h1>Weather app</h1>
+                    <form>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Enter city...">
+                        </div>
+                        <button class="btn btn-primary" type="button">Get Temp</button>
+                    </form>
+                </div>
+                <div class="results">
+                    <!-- <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">London</h4>
+                            <p class="card-text">4 degrees celcius</p>
+                            <div class="card-link remove-card">Remove</div>
+                            <div class="card-link add-comment">Comment</div>
+                            <ul class="list-group comments">
+                                <li class="list-group-item comment" data-id="1">
+                                    <p> Comment text</p>
+                                    <div class="card-link remove-comment">Remove</div>
+                                </li>
+                            </ul>
+                            <div class="write-comment">
+                                <input type="text" class="form-control comment-text" placeholder="Write a comment...">
+                                <button class="btn btn-primary" type="button">Comment</button>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Handlebars template for adding city weather card (the search result) to the screen -->
+    <script id="result-template"type="text/x-handlebars-template">
+        {{#each results}}
+            <div class="card" data-name="{{name}}">
+                <div class="card-body">
+                    <h4 class="card-title">{{name}}, {{sys.country}}</h4>
+                    <p class="card-text">{{main.temp}} &deg;C</p>
+                    <div class="card-link remove-card">Remove</div>
+                    <div class="card-link add-comment">Comment</div>
+                </div>
+            </div>
+        {{/each}}
+    </script>
+
     <script type="text/javascript" src="jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="bootstrap/dist/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="handlebars/dist/handlebars.min.js"></script>
     <script type="text/javascript" src="script.js"></script>
 </body>
+
 </html>
