@@ -3,31 +3,32 @@ var results = [];
 var addResult = function(data, date) {
     data.comments = [];
     data.dateInfo = {date: date.toLocaleDateString('en-GB'), time: date.toLocaleTimeString('en-GB')};
+    data.img = "http://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
     results.push(data);
 };
 
-var findResultByName = function(name) {
+var findResultByNameAndCountry = function(data) {
     return results.findIndex(function(element) {
-        return element.name === name;
+        return (element.name === data.name && element.sys.country === data.country);
     });
 };
 
-var removeResult = function(name) {
-    var i = findResultByName(name);
+var removeResult = function(data) {
+    var i = findResultByNameAndCountry(data);
     results.splice(i, 1);
 };
 
-var addComment = function(cityName, comment) {
-    var i = findResultByName(cityName);
+var addComment = function(data, comment) {
+    var i = findResultByNameAndCountry(data);
     results[i].comments.push({text: comment});
 };
 
-var renderComments = function(comments, cityName) {
+var renderComments = function(comments, cityName, country) {
     commentsObject = {comments: comments};
     var source = $('#comments-template').html();
     var template = Handlebars.compile(source);
     var newHTML = template(commentsObject);
-    var cardSelector ='.card[data-name="' + cityName + '"] .card-body';
+    var cardSelector ='.card[data-name="' + cityName + '"][data-country="' + country + '"] .card-body';
     $(cardSelector).append(newHTML);
 };
 
@@ -39,7 +40,7 @@ var renderResults = function() {
     var newHTML = template(resultsObject);
     $('.results').append(newHTML);
     results.forEach(function(element) {
-        return renderComments(element.comments, element.name);
+        return renderComments(element.comments, element.name, element.sys.country);
     });
 };
 
@@ -63,7 +64,7 @@ var fetch = function(city) {
 };
 
 // events to handle clicking buttons & links
-$('button').on('click', function() {
+$('.page-header form button').on('click', function() {
     var $input = $(this).closest('form').find('input');
     var city = $input.val();
     fetch(city);
@@ -71,8 +72,8 @@ $('button').on('click', function() {
 });
 
 $('.results').on('click', '.remove-card', function() {
-    var name = $(this).closest('.card').data().name;
-    removeResult(name);
+    var data = $(this).closest('.card').data();
+    removeResult(data);
     renderResults();
 });
 
@@ -82,8 +83,8 @@ $('.results').on('click', '.add-comment', function() {
 
 $('.results').on('click', '.write-comment button', function() {
     var comment = $(this).closest('.write-comment').find('input').val();
-    var cityName = $(this).closest('.card').data().name;
-    addComment(cityName, comment);
+    var data = $(this).closest('.card').data();
+    addComment(data, comment);
     renderResults();
 });
 
@@ -104,8 +105,8 @@ $('.results').on('keypress', '.comment-text', function(event) {
         event.preventDefault();
         var comment = $(this).val();
         if (comment !== '') {
-            var cityName = $(this).closest('.card').data().name;
-            addComment(cityName, comment);
+            var data = $(this).closest('.card').data();
+            addComment(data, comment);
             renderResults();
             $(this).val('');
         }
