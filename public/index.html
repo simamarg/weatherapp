@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Weather App</title>
 </head>
 
 <body>
@@ -18,14 +19,15 @@
                     <h1 class="bold">Weather App</h1>
                     <form>
                         <div class="input-group">
-                            <input type="text" class="form-control city-input" placeholder="Enter City or City, Country">
+                            <input type="text" class="form-control city-input" placeholder="Search for a city (or city, country code)">
                             <div class="input-group-btn">
                                 <button class="btn btn-primary" type="button">Get Temp</button>
                             </div>
                         </div>
                     </form>
+                    <div class="error"></div>
                 </div>
-
+                
                 <div class="results"></div>
             </div>
         </div>

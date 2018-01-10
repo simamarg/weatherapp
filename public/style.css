@@ -7,7 +7,14 @@ h1 {
 }
 
 .page-header {
-    padding-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.error {
+    padding-top: 10px;
+    font-size: 1.2em;
+    font-style: italic;
+    color: #337ab7;
 }
 
 .card {

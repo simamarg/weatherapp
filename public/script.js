@@ -15,7 +15,7 @@ var addResult = function(data, date) {
     data.comments = [];
     data.dateInfo = {date: date.toLocaleDateString('en-GB'), time: date.toLocaleTimeString('en-GB')};
     data.img = "http://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
-    results.push(data);
+    results.unshift(data);
 };
 
 // find the index of the result in the result array based on its' city and country
@@ -34,7 +34,7 @@ var removeResult = function(data) {
 // store comment in the comments array of the specific city result
 var addComment = function(data, comment) {
     var i = findResultByNameAndCountry(data);
-    results[i].comments.push({text: comment});
+    results[i].comments.unshift({text: comment});
 };
 
 // show comments on screen
@@ -73,6 +73,9 @@ var fetch = function(city) {
                 addResult(data.list[0], date);
                 saveToLocalStorage();
                 renderResults();
+                $('.error').empty();
+            } else {
+                $('.error').text('Sorry, we couldn\'t find any results for ' + city + ' :(');
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -96,11 +99,13 @@ $('.results').on('click', '.remove-card', function() {
     removeResult(data);
     saveToLocalStorage();
     renderResults();
+    $('.error').empty();
 });
 
 // pressing comment link in the result card to toggle add comment form visibility (show/hide add comment form)
 $('.results').on('click', '.add-comment', function() {
     $(this).siblings('.write-comment').toggleClass('show');
+    $('.error').empty();
 });
 
 // pressing write comment for a result card
@@ -110,6 +115,7 @@ $('.results').on('click', '.write-comment button', function() {
     addComment(data, comment);
     saveToLocalStorage();
     renderResults();
+    $('.error').empty();
 });
 
 // show the items from localStorage when page loads
@@ -136,8 +142,9 @@ $('.results').on('keypress', '.comment-text', function(event) {
         if (comment !== '') {
             var data = $(this).closest('.card').data(); // data = city & country
             addComment(data, comment);
+            saveToLocalStorage();
             renderResults();
-            $(this).val('');
+            $('.error').empty();
         }
     }
 });
