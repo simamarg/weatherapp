@@ -1,3 +1,8 @@
+body {
+    background: url('img/sky.png') no-repeat center fixed;
+    background-size: cover;
+}
+
 h1 {
     margin: 20px auto;
 }
@@ -25,6 +30,7 @@ h1 {
 
 .card .card-body {
     padding: 1.3rem;
+    background-color: rgba(255, 255, 255, 0.4);
 }
 
 .card .card-body .card-link {
@@ -66,4 +72,11 @@ h1 {
 
 .card .write-comment input {
     margin-bottom: 5px;
+}
+
+.credit {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 10px;
 }
