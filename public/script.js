@@ -21,6 +21,7 @@ var findResultByNameAndCountry = function(data) {
 var addResult = function(data, date, moveToTop) {
     var i = findResultByNameAndCountry({name: data.name, country: data.sys.country});
     data.dateInfo = {date: date.toLocaleDateString('en-GB'), time: date.toLocaleTimeString('en-GB')};
+    data.dateMs = date.getTime();
     data.img = "http://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
     if (i > -1) { // if the city is already in the results array - refresh the data of the result
         data.comments = results[i].comments;
@@ -48,6 +49,18 @@ var addComment = function(data, comment) {
     var i = findResultByNameAndCountry(data);
     results[i].comments.unshift({text: comment});
 };
+
+var sortResults = function(parameter) {
+    results.sort(function(a, b) {
+        if (a[parameter] < b[parameter]) {
+            return -1;
+        }
+        if (a[parameter] > b[parameter]) {
+            return 1;
+        }
+        return 0;
+    });
+} 
 
 // show comments on screen
 var renderComments = function(comments, cityName, country) {
@@ -134,6 +147,13 @@ $('.results').on('click', '.write-comment button', function() {
 $('.results').on('click', '.fa-refresh', function() {
     var city = $(this).closest('.card').data().name + ", " + $(this).closest('.card').data().country;
     fetch(city, false);
+});
+
+// select a sort option (by city / date)
+$('.sort').on('change', function() {
+    sortResults($(this).val());
+    renderResults();
+    $(this).val("0");
 });
 
 // show the items from localStorage when page loads
