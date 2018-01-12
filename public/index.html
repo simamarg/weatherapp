@@ -40,6 +40,7 @@
         {{#each results}}
             <div class="card" data-name="{{name}}" data-country="{{sys.country}}">
                 <div class="card-body">
+                    <i class="fa fa-refresh" aria-hidden="true"></i>
                     <h4 class="card-title bold">{{name}}, {{sys.country}}</h4>
                     <p class="card-text">
                         <img src="{{img}}"> {{main.temp}}&deg;C on {{dateInfo.date}} at {{dateInfo.time}}

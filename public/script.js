@@ -1,28 +1,40 @@
 var STORAGE_ID = 'results';
 
 var saveToLocalStorage = function () {
-  localStorage.setItem(STORAGE_ID, JSON.stringify(results));
+    localStorage.setItem(STORAGE_ID, JSON.stringify(results));
 }
 
 var getFromLocalStorage = function () {
-  return JSON.parse(localStorage.getItem(STORAGE_ID) || '[]');
+    return JSON.parse(localStorage.getItem(STORAGE_ID) || '[]');
 }
 
 var results = getFromLocalStorage();
-
-// store the search result to the results array
-var addResult = function(data, date) {
-    data.comments = [];
-    data.dateInfo = {date: date.toLocaleDateString('en-GB'), time: date.toLocaleTimeString('en-GB')};
-    data.img = "http://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
-    results.unshift(data);
-};
 
 // find the index of the result in the result array based on its' city and country
 var findResultByNameAndCountry = function(data) {
     return results.findIndex(function(element) {
         return (element.name === data.name && element.sys.country === data.country);
     });
+};
+
+// store the search result to the results array
+var addResult = function(data, date, moveToTop) {
+    var i = findResultByNameAndCountry({name: data.name, country: data.sys.country});
+    data.dateInfo = {date: date.toLocaleDateString('en-GB'), time: date.toLocaleTimeString('en-GB')};
+    data.img = "http://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
+    if (i > -1) { // if the city is already in the results array - refresh the data of the result
+        data.comments = results[i].comments;
+        // move the card to top only if the user search for the same city again (but not for pressing refresh button)
+        if (moveToTop) {
+            results.splice(i, 1);
+            results.unshift(data);
+        } else {
+            results[i] = data;
+        }
+    } else {
+        data.comments = [];
+        results.unshift(data);
+    }
 };
 
 // remove result from the results array
@@ -61,7 +73,7 @@ var renderResults = function() {
 };
 
 // request the weather for a given city from OpenWeatherMap API
-var fetch = function(city) {
+var fetch = function(city, moveToTop = true) {
     $.ajax({
         method: "GET",
         url: 'http://api.openweathermap.org/data/2.5/find?q=' + city + 
@@ -70,7 +82,7 @@ var fetch = function(city) {
             console.log(data);
             var date = new Date();
             if (data.list.length) {
-                addResult(data.list[0], date);
+                addResult(data.list[0], date, moveToTop);
                 saveToLocalStorage();
                 renderResults();
                 $('.error').empty();
@@ -116,6 +128,12 @@ $('.results').on('click', '.write-comment button', function() {
     saveToLocalStorage();
     renderResults();
     $('.error').empty();
+});
+
+// pressing refresh icon on the top of the result card refreshes the temp but doesn't move the card to top of page
+$('.results').on('click', '.fa-refresh', function() {
+    var city = $(this).closest('.card').data().name + ", " + $(this).closest('.card').data().country;
+    fetch(city, false);
 });
 
 // show the items from localStorage when page loads
