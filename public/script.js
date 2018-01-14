@@ -22,6 +22,7 @@ var addResult = function(data, date, moveToTop) {
     var i = findResultByNameAndCountry({name: data.name, country: data.sys.country});
     data.dateInfo = {date: date.toLocaleDateString('en-GB'), time: date.toLocaleTimeString('en-GB')};
     data.dateMs = date.getTime();
+    data.main.temp = Math.round(data.main.temp);
     data.img = "http://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
     if (i > -1) { // if the city is already in the results array - refresh the data of the result
         data.comments = results[i].comments;
